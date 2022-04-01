@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 
-
+import 'package:intl/intl.dart';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +44,9 @@ class _contactState extends State<contact> {
 
   String togglecheckin(String d) {  //Change timeago or DateTime
     if (value == true) {
-      return d;
+      DateTime x = DateTime.parse(d);
+      String formattedDate = DateFormat('yyyy-MM-dd    kk:mm:ss').format(x);
+      return formattedDate;
     } else {
       return timeAgo(d);
     }
