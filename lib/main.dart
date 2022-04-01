@@ -55,15 +55,15 @@ class _contactState extends State<contact> {
     Duration diff = DateTime.now().difference(x);
 
     if (diff.inDays > 0) {
-      return "${diff.inDays} ${diff.inDays == 1 ? "day" : "days"} ago";
+      return "         ${diff.inDays} ${diff.inDays == 1 ? "day" : "days"} ago";
     }
     if (diff.inHours > 0) {
-      return "${diff.inHours} ${diff.inHours == 1 ? "hour" : "hours"} ago";
+      return "        ${diff.inHours} ${diff.inHours == 1 ? "hour" : "hours"} ago";
     }
     if (diff.inMinutes > 0) {
-      return "${diff.inMinutes} ${diff.inMinutes == 1 ? "minute" : "minutes"} ago";
+      return "        ${diff.inMinutes} ${diff.inMinutes == 1 ? "minute" : "minutes"} ago";
     }
-    return "just now";
+    return "          just now";
   }
 
   Widget EndofList() {    //End of list function
@@ -140,7 +140,7 @@ Future<void> addContact()
                             
                             ExpansionTile(
                               tilePadding: EdgeInsets.all(10),
-                              title: (Text("${_contactData[index].user}")),
+                              title: (Text("${index+1}    ${_contactData[index].user}")),
                               subtitle: Text(
                                   togglecheckin("${_contactData[index].checkin}")),
                               textColor: Colors.black,
@@ -151,7 +151,7 @@ Future<void> addContact()
                                         child: Padding(
                                       padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                                       child: Text(
-                                        "${_contactData[index].phone}",
+                                        "Phone number : ${_contactData[index].phone}",
                                         style: TextStyle(fontSize: 15),
                                       ),
                                     )),
