@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 
+
+import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'contactlist.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:share_plus/share_plus.dart';
-
 
 void main() => runApp(MaterialApp(
       home: contact(),
@@ -21,6 +23,8 @@ class contact extends StatefulWidget {
 
 class _contactState extends State<contact> {
   bool value = false;
+   List<contactlist> _contactData=[];
+  late Future<void> _initContactData;
 
   Widget buildSwitch() => Switch.adaptive(  //Build toggle switch
         value: value,
@@ -30,10 +34,12 @@ class _contactState extends State<contact> {
       );
 
   Future<List<contactlist>> ReadContactList() async { //Read json file
-    final response = await rootBundle.loadString('assets/contact.json');
-    final list = json.decode(response) as List<dynamic>;
-
-    return list.map((e) => contactlist.fromJson(e)).toList();
+    final  response = await rootBundle.loadString('assets/contact.json');
+    final data = await json.decode(response) as List<dynamic>;
+    setState(() {
+      _contactData=data.map((data) => contactlist.fromJson(data)).toList();
+    });
+    return _contactData;
   }
 
   String togglecheckin(String d) {  //Change timeago or DateTime
@@ -73,12 +79,33 @@ class _contactState extends State<contact> {
     );
   }
 
-  Future<void> Addcontact() async { //Append 5 random into list
-    setState(() {});
+  
+  
+  @override
+  void initState() {
+    super.initState();
+    _initContactData=ReadContactList();
   }
 
+Future<void> addContact()
+{
+  for(var i=0;i<5;i++)
+  {
 
+    var x= Random();
+    var temp=x.nextInt(_contactData.length);
+    contactlist tempContact = _contactData[temp];
 
+    
+    setState(() {
+    
+    _contactData.add(tempContact);
+    
+    });
+
+  }
+  return _initContactData;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -91,29 +118,31 @@ class _contactState extends State<contact> {
           actions: [buildSwitch()],
         ),
         body: RefreshIndicator(
-            onRefresh: Addcontact,
-            child: FutureBuilder(
-                future: ReadContactList(),
+          onRefresh: addContact,
+        child:
+        FutureBuilder(
+                future: _initContactData,
                 builder: (context, data) {
                   if (data.hasError) {
                     return Text("${data.error}");
                   } else if (data.hasData) {
-                    var items = data.data as List<contactlist>;
-
-                    items.sort(
+                    
+                   
+                    _contactData.sort(
                         (b, a) => a.checkin!.compareTo(b.checkin as DateTime));
                     return ListView.builder(
                       // ignore: unnecessary_null_comparison
-                      itemCount: items == null ? 0 : items.length,
+                      itemCount: _contactData == null ? 0 : _contactData.length,
 
                       itemBuilder: (context, index) {
-                        return Column(
+                        return  Column(
                           children: [
+                            
                             ExpansionTile(
                               tilePadding: EdgeInsets.all(10),
-                              title: (Text("${items[index].user}")),
+                              title: (Text("${_contactData[index].user}")),
                               subtitle: Text(
-                                  togglecheckin("${items[index].checkin}")),
+                                  togglecheckin("${_contactData[index].checkin}")),
                               textColor: Colors.black,
                               children: <Widget>[
                                 Row(
@@ -122,13 +151,13 @@ class _contactState extends State<contact> {
                                         child: Padding(
                                       padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                                       child: Text(
-                                        "${items[index].phone}",
+                                        "${_contactData[index].phone}",
                                         style: TextStyle(fontSize: 15),
                                       ),
                                     )),
                                     IconButton(
                                       onPressed: () async{
-                                        await Share.share('${items[index].user} -  ${items[index].phone}');
+                                        await Share.share('${_contactData[index].user} -  ${_contactData[index].phone}');
                                       },
                                       icon: Icon(Icons.share),
                                     )
@@ -136,9 +165,10 @@ class _contactState extends State<contact> {
                                 ),
                               ],
                             ),
-                            index == items.length - 1 ? EndofList() : Center()
-                          ],
+                            index == (_contactData.length-1) ? EndofList() : Center()
+                          ]
                         );
+                        
                       },
 
                       scrollDirection: Axis.vertical,
@@ -149,6 +179,10 @@ class _contactState extends State<contact> {
                       child: CircularProgressIndicator(),
                     );
                   }
-                })));
+                }
+                
+        )
+        )
+                );
   }
 }

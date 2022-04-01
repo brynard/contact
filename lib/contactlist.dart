@@ -24,6 +24,17 @@ contactlist(
       checkin =  DateTime.parse(json['check-in']);
 
          }
+
+
+    void setUsername(String x)
+    {
+      user=x;
+    }
+
+    String? getUsername()
+    {
+      return user;
+    }
 }
 
 
