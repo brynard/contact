@@ -18,4 +18,6 @@ samples, guidance on mobile development, and a full API reference.
 
 
 
-Plugins : contacts_service 0.6.3
+Plugins : 
+    share_plus: ^4.0.3
+    intl: ^0.17.0
