@@ -16,7 +16,8 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
-
+Brynard Bryan Edmund
+001008120133
 
 Plugins : 
     share_plus: ^4.0.3
